@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-5">Hoş geldin, {{ username }}!</h1>
+        <p>Tarama yapmak için aşağıdaki alanı kullanabilirsiniz:</p>
+        <!-- Tarama yapma alanı buraya eklenecek -->
+        <a href="{{ url_for('logout') }}" class="btn btn-danger">Çıkış Yap</a>
+    </div>
+</body>
+</html>

@@ -1,38 +1,104 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web Scanner</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Ana Sayfa</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: Arial, sans-serif;
+        }
+
+        .background {
+            background-image: url('/static/images/resim.jpg');
+            /* Arka plan resminizi buraya ekleyin */
+            background-size: cover;
+            background-position: center;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .content {
+            background: rgba(0, 0, 0, 0.5);
+            /* Arka planı hafifçe karartmak için */
+            padding: 30px;
+            text-align: center;
+            color: #fff;
+            border-radius: 10px;
+        }
+
+        h1, p {
+            font-family: 'Montserrat', sans-serif;
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+            opacity: 0; /* Başlangıçta görünmez */
+        }
+
+        p {
+            font-size: 1.2rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px;
+            background-color: #314527;
+            color: #fff;
+            cursor: pointer;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #223d13;
+        }
+    </style>
 </head>
+
 <body>
-    <h1>Hoş Geldiniz!</h1>
-    <p>Web uygulamanız çalışıyor.</p>
+    <div class="background">
+        <div class="content">
+            <h1 id="welcome-header"></h1>
+            <p id="welcome-message"></p>
+            <a href="{{ url_for('login_page') }}" class="btn">Giriş Yap</a>
+            <a href="{{ url_for('register_page') }}" class="btn">Kayıt Ol</a>
+        </div>
+    </div>
 
-    {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        <ul>
-        {% for message in messages %}
-          <li>{{ message }}</li>
-        {% endfor %}
-        </ul>
-      {% endif %}
-    {% endwith %}
+    <script>
+        function typeWriter(element, text, delay) {
+            let index = 0;
+            element.style.opacity = '1'; // Yazı görünür hale getirilir
 
-    <h2>Kayıt Ol</h2>
-    <form method="POST" action="/register">
-        <input type="text" name="username" placeholder="Kullanıcı Adı" required>
-        <input type="email" name="email" placeholder="Email" required>
-        <input type="password" name="password" placeholder="Şifre" required>
-        <button type="submit">Kayıt Ol</button>
-    </form>
-    
-    <h2>Giriş Yap</h2>
-    <form method="POST" action="/login">
-        <input type="text" name="username" placeholder="Kullanıcı Adı" required>
-        <input type="password" name="password" placeholder="Şifre" required>
-        <button type="submit">Giriş Yap</button>
-    </form>
+            function type() {
+                if (index < text.length) {
+                    element.textContent += text.charAt(index);
+                    index++;
+                    setTimeout(type, delay); // Her harften sonra belirli bir zaman aralığı ile çağır
+                }
+            }
+
+            type();
+        }
+
+        // Sayfa yüklendiğinde yazıları ekle
+        window.onload = function () {
+            typeWriter(document.getElementById('welcome-header'), 'Hoş Geldiniz!', 100); // 100 ms aralıkla yaz
+            setTimeout(() => {
+                typeWriter(document.getElementById('welcome-message'), 'Tarama yapabilmek için kayıt olmanız veya giriş yapmanız gerekmektedir.', 100); // 100 ms aralıkla yaz
+            }, 1000); // 1 saniye bekle
+        };
+    </script>
 </body>
+
 </html>
