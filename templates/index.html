@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Scanner</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Hoş Geldiniz!</h1>
+    <p>Web uygulamanız çalışıyor.</p>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul>
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <h2>Kayıt Ol</h2>
+    <form method="POST" action="/register">
+        <input type="text" name="username" placeholder="Kullanıcı Adı" required>
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="password" name="password" placeholder="Şifre" required>
+        <button type="submit">Kayıt Ol</button>
+    </form>
+    
+    <h2>Giriş Yap</h2>
+    <form method="POST" action="/login">
+        <input type="text" name="username" placeholder="Kullanıcı Adı" required>
+        <input type="password" name="password" placeholder="Şifre" required>
+        <button type="submit">Giriş Yap</button>
+    </form>
+</body>
+</html>
