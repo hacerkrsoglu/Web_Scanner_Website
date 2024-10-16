@@ -13,7 +13,7 @@ CORS(app)
 # Veritabanı ayarları
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://docker_user:docker_user@localhost:5433/DbScanner'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db.init_app(app)  # db'yi uygulama ile başlatın
+db.init_app(app)
 migrate = Migrate(app, db)
 
 # Flask-Mail ayarları
@@ -40,6 +40,12 @@ def register():
     username = request.form['username']
     email = request.form['email']
     password = request.form['password']
+    accept_terms = request.form.get('acceptTerms')
+
+    # KVKK onayı kontrolü
+    if not accept_terms:
+        flash('Kayıt olabilmek için KVKK ve Gizlilik Politikasını kabul etmelisiniz.')
+        return redirect(url_for('register_page'))
 
     # Kullanıcı adı ve e-posta kontrolü
     existing_user = User.query.filter((User.username == username) | (User.email == email)).first()
@@ -61,19 +67,27 @@ def register():
         return redirect(url_for('login_page'))
     except Exception as e:
         db.session.rollback()
-        flash('Kayıt sırasında bir hata oluştu: {}'.format(str(e)))
+        flash(f'Kayıt sırasında bir hata oluştu: {str(e)}')
         return redirect(url_for('register_page'))
 
 def is_strong_password(password):
+    """Şifre güvenliği kontrolü: 8 karakter, en az bir büyük harf ve bir rakam"""
     return (len(password) >= 8 and
             any(c.isupper() for c in password) and
             any(c.isdigit() for c in password))
+
+
+# KVKK Aydınlatma Metni Sayfası
+@app.route('/kvkk', methods=['GET'])
+def kvkk():
+    return render_template('kvkk.html')
 
 # Giriş sayfası (GET)
 @app.route('/login', methods=['GET'])
 def login_page():
     return render_template('login.html')
 
+# Giriş işlemi (POST)
 @app.route('/login', methods=['POST'])
 def login():
     username = request.form['username']
@@ -83,10 +97,10 @@ def login():
     if user and check_password_hash(user.password, password):
         session['user_id'] = user.id
         flash('Giriş başarılı!')
-        return redirect(url_for('dashboard', username=user.username))  # Kullanıcı ismini gönder
+        return redirect(url_for('dashboard', username=user.username))
     else:
         flash('Kullanıcı adı veya şifre yanlış.')
-        return redirect(url_for('login_page'))  # Hatalı girişte login sayfasına geri dön
+        return redirect(url_for('login_page'))
 
 # Kullanıcı paneli (giriş yapan kullanıcı için)
 @app.route('/dashboard')
