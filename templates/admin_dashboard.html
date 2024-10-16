@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Paneli</title>
+</head>
+<body>
+    <h1>Admin Paneline Hoşgeldiniz!</h1>
+    
+    <h2>Kullanıcılar</h2>
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Kullanıcı Adı</th>
+            <th>E-posta</th>
+            <th>Admin mi?</th>
+        </tr>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.id }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ 'Evet' if user.is_admin else 'Hayır' }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    
+    <h2>Tarama Kayıtları</h2>
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Tarama URL'si</th>
+            <th>Kullanıcı</th>
+        </tr>
+        {% for scan in scans %}
+        <tr>
+            <td>{{ scan.id }}</td>
+            <td>{{ scan.url }}</td>
+            <td>{{ scan.user.username }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <a href="{{ url_for('logout') }}">Çıkış Yap</a>
+</body>
+</html>
